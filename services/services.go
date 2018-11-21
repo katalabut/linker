@@ -2,9 +2,10 @@ package services
 
 import (
 	"fmt"
-	"net/http"
 	. "linker/router"
 	. "linker/services/linker"
+	"linker/tool/db"
+	"net/http"
 )
 
 type Service interface {
@@ -14,7 +15,9 @@ type Services []Service
 
 func Run() Services {
 	return Services{
-		&Linker{},
+		&Linker{
+			db.NewDBConnection(),
+		},
 	}
 }
 

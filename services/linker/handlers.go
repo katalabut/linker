@@ -15,6 +15,7 @@ func (l *Linker) urlCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// используем слой базы данных для добавления URL
+	l.db.AddUrls()
 	//Ls.myconnection.AddUrls(reqBodyStruct.LongUrl, reqBodyStruct.ShortUrl)
 
 	w.Header().Set("Content-Type", "application/json")
