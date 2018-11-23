@@ -16,7 +16,7 @@ type Services []Service
 func Run() Services {
 	return Services{
 		&Linker{
-			db.NewDBConnection(),
+			Db: db.NewDBConnection(),
 		},
 	}
 }

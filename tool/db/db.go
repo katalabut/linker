@@ -10,6 +10,9 @@ type MgoConnection struct {
 	session *mgo.Session
 }
 
+const Host = "192.168.99.100"
+const Name = "linkerdb"
+
 func NewDBConnection() (conn *MgoConnection) {
 	conn = new(MgoConnection)
 	conn.createLocalConnection()
@@ -18,7 +21,7 @@ func NewDBConnection() (conn *MgoConnection) {
 
 func (c *MgoConnection) createLocalConnection() (err error) {
 	fmt.Println("Connecting to local mongo...")
-	c.session, err = mgo.Dial("127.0.0.1")
+	c.session, err = mgo.Dial(Host)
 
 	if err != nil {
 		fmt.Printf("Error occured while creating mongodb connection: %s", err.Error())
@@ -26,50 +29,27 @@ func (c *MgoConnection) createLocalConnection() (err error) {
 	}
 
 	fmt.Println("Connection established to mongo server")
-	urlcollection := c.session.DB("LinkShortnerDB").C("UrlCollection")
+	urlcollection := c.session.DB(Name).C("Urls")
 	if urlcollection == nil {
-		//err = errors.New("Collection could not be created, maybe need to create it manually")
+		err = errors.New("Collection could not be created")
 		return
 	}
-	//This will create a unique index to ensure that there won't be duplicate shorturls in the database.
+
 	index := mgo.Index{
-		Key:      []string{"$text:shorturl"},
+		Key:      []string{"$text:short"},
 		Unique:   true,
 		DropDups: true,
 	}
 	urlcollection.EnsureIndex(index)
-
+	return
 }
 
 func (c *MgoConnection) getSessionAndCollection() (session *mgo.Session, urlCollection *mgo.Collection, err error) {
 	if c.session != nil {
 		session = c.session.Copy()
-		urlCollection = session.DB("db").C("collection")
+		urlCollection = session.DB(Name).C("Urls")
 	} else {
 		err = errors.New("No original session found")
 	}
-	return
-}
-
-func (c *MgoConnection) AddUrls(longUrl string) (err error) {
-	//get a copy of the session
-	/*session, urlCollection, err := c.getSessionAndCollection()
-	if err == nil {
-		defer session.Close()
-		//insert a document with the provided function arguments
-		err = urlCollection.Insert(
-			&mongoDocument{
-				Id:       bson.NewObjectId(),
-				ShortUrl: shortUrl,
-				LongUrl:  longUrl,
-			},
-		)
-		if err != nil {
-			//check if the error is due to duplicate shorturl
-			if mgo.IsDup(err) {
-				err = errors.New("Duplicate name exists for the shorturl")
-			}
-		}
-	}*/
 	return
 }

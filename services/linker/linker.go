@@ -5,8 +5,8 @@ import (
 	"linker/tool/db"
 )
 
-type Linker struct{
-	db *db.MgoConnection
+type Linker struct {
+	Db *db.MgoConnection
 }
 
 type Url struct {

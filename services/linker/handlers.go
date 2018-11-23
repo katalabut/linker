@@ -3,23 +3,24 @@ package linker
 import (
 	"encoding/json"
 	"fmt"
+	"linker/utils"
 	"net/http"
 )
 
 func (l *Linker) urlCreate(w http.ResponseWriter, r *http.Request) {
-	reqStruct := new(Url)
-	// создаем новый декодер, использующий ридер r.Body
-	// и читаем данные в структуру
-	if err := json.NewDecoder(r.Body).Decode(&reqStruct); err != nil {
+	urlStruct := &Url{}
+
+	if err := json.NewDecoder(r.Body).Decode(&urlStruct); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode("BadRequest")
 		return
 	}
-	// используем слой базы данных для добавления URL
-	l.db.AddUrls()
-	//Ls.myconnection.AddUrls(reqBodyStruct.LongUrl, reqBodyStruct.ShortUrl)
+
+	urlModel, _ := l.Db.AddUrls(urlStruct.Long)
+	urlStruct.Short = utils.MakeUrl(urlModel.ShortUrl)
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(reqStruct)
+	json.NewEncoder(w).Encode(urlStruct)
 }
 
 func (l *Linker) urlShow(w http.ResponseWriter, r *http.Request) {
