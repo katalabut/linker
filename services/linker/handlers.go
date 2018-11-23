@@ -16,7 +16,13 @@ func (l *Linker) urlCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	urlModel, _ := l.Db.AddUrls(urlStruct.Long)
+	urlModel, err := l.Db.AddUrls(urlStruct.Long)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode("BadRequest 2")
+		return
+	}
+
 	urlStruct.Short = utils.MakeUrl(urlModel.ShortUrl)
 
 	w.Header().Set("Content-Type", "application/json")
