@@ -8,13 +8,13 @@ import (
 	"net/url"
 )
 
-type Url struct {
+type docUrl struct {
 	Id       bson.ObjectId `bson:"_id"`
 	ShortUrl string        `bson:"short"`
 	LongUrl  string        `bson:"url"`
 }
 
-func (c *MgoConnection) AddUrls(longUrl string) (link *Url, err error) {
+func (c *MgoConnection) AddUrls(longUrl string) (link *docUrl, err error) {
 
 	parseUrl, err := url.ParseRequestURI(longUrl)
 	if err != nil {
@@ -30,11 +30,11 @@ func (c *MgoConnection) AddUrls(longUrl string) (link *Url, err error) {
 
 	defer session.Close()
 
-	link = &Url{}
+	link = &docUrl{}
 
 	err = urlCollection.Find(bson.M{"url": parseUrl.String()}).One(&link)
 	if err != nil {
-		link = &Url{
+		link = &docUrl{
 			Id:       bson.NewObjectId(),
 			ShortUrl: utils.RandStringBytesMaskImprSrc(6),
 			LongUrl:  parseUrl.String(),
@@ -49,4 +49,21 @@ func (c *MgoConnection) AddUrls(longUrl string) (link *Url, err error) {
 		}
 	}
 	return
+}
+
+func (c *MgoConnection) FindlongUrl(shortUrl string) (lUrl string, err error) {
+	//create an empty document struct
+	result := docUrl{}
+	//get a copy of the original session and a collection
+	session, urlCollection, err := c.getSessionAndCollection()
+	if err != nil {
+		return
+	}
+	defer session.Close()
+	//Find the shorturl that we need
+	err = urlCollection.Find(bson.M{"short": shortUrl}).One(&result)
+	if err != nil {
+		return
+	}
+	return result.LongUrl, nil
 }
