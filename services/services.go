@@ -2,9 +2,9 @@ package services
 
 import (
 	"fmt"
-	. "linker/router"
-	. "linker/services/linker"
-	"linker/tool/db"
+	. "github.com/katalabut/linker/router"
+	. "github.com/katalabut/linker/services/linker"
+	"github.com/katalabut/linker/tool/db"
 	"net/http"
 )
 

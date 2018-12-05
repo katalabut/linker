@@ -3,8 +3,8 @@ package linker
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/katalabut/linker/utils"
 	"html/template"
-	"linker/utils"
 	"net/http"
 )
 

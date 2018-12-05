@@ -1,8 +1,8 @@
 package linker
 
 import (
-	. "linker/router"
-	"linker/tool/db"
+	. "github.com/katalabut/linker/router"
+	"github.com/katalabut/linker/tool/db"
 )
 
 type Linker struct {

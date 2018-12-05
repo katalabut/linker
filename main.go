@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"linker/router"
-	"linker/services"
+	"github.com/katalabut/linker/router"
+	"github.com/katalabut/linker/services"
 	"net/http"
 )
 

@@ -1,10 +1,10 @@
 package db
 
 import (
+	"github.com/katalabut/linker/utils"
 	"github.com/pkg/errors"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"linker/utils"
 	"net/url"
 )
 
