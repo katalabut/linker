@@ -16,18 +16,20 @@ type Route struct {
 type Routes []Route
 
 func InitRouter(routes Routes, NotFoundHandler http.HandlerFunc) *mux.Router {
-	router := mux.NewRouter().StrictSlash(true)
-	router.NotFoundHandler = NotFoundHandler
-	router.MethodNotAllowedHandler = NotFoundHandler
+	r := mux.NewRouter().StrictSlash(true)
 
 	for _, route := range routes {
 		fmt.Println(route.Pattern)
-		router.
+		r.
 			Methods(route.Method).
 			Path(route.Pattern).
 			Name(route.Name).
 			Handler(route.HandlerFunc)
 	}
 
-	return router
+	r.NotFoundHandler = NotFoundHandler
+	r.MethodNotAllowedHandler = NotFoundHandler
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+
+	return r
 }
