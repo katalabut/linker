@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/katalabut/linker/router"
 	"github.com/katalabut/linker/services"
-	"net/http"
 )
 
 func main() {
